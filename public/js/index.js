@@ -5,10 +5,10 @@ socket.on('connect', function(){
 
     //not emitting event until we are connected
 
-    socket.emit('createMessage', {
-        from: 'jen@example.com',
-        text: 'Happy New Year'
-    });
+    // socket.emit('createMessage', {
+    //     from: 'jen@example.com',
+    //     text: 'Happy New Year'
+    // });
 
 });
 

@@ -20,15 +20,22 @@ io.on('connection',(socket)=>{
     console.log('New user connected');
 
     //emit the event to a single connection
-    socket.emit('newMessage', {
-        from: 'hehe@example.com',
-        text: 'hello world',
-        createdAt: 456
-    });
+    // socket.emit('newMessage', {
+    //     from: 'hehe@example.com',
+    //     text: 'hello world',
+    //     createdAt: 456
+    // });
 
     socket.on('createMessage', (message)=>{
         console.log('create Message', message);
-        
+        //emit an event to every single connection or everyone
+        //that opens the same link in the browser
+        io.emit('newMessage', {
+            from: message.from,
+            text: message.text,
+            //createdAt by server only to prevent spoofing from user
+            createdAt: new Date().getTime()
+        })
     });
 
     socket.on('disconnect', ()=>{
