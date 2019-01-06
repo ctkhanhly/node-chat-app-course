@@ -1,5 +1,8 @@
 var socket = io(); 
-        
+
+//emit setSocketId
+//https://stackoverflow.com/questions/43464617/how-to-get-user-id-using-username-in-socket-io/43472976
+
 socket.on('connect', function(){
     console.log('Connected to the server');
 
@@ -11,6 +14,7 @@ socket.on('connect', function(){
     // });
 
 });
+
 
 //no arrow function here, maynot work with mobile, mozilla
 socket.on('disconnect', function () {
@@ -27,3 +31,5 @@ socket.on('newMessage', function (message){
 });
 
 //emit data from client to server
+
+
