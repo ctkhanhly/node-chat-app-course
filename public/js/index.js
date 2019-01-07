@@ -1,17 +1,8 @@
 var socket = io(); 
-
-//emit setSocketId
-//https://stackoverflow.com/questions/43464617/how-to-get-user-id-using-username-in-socket-io/43472976
-
 socket.on('connect', function(){
     console.log('Connected to the server');
 
     //not emitting event until we are connected
-
-    // socket.emit('createMessage', {
-    //     from: 'jen@example.com',
-    //     text: 'Happy New Year'
-    // });
 
 });
 
@@ -28,8 +19,24 @@ socket.on('disconnect', function () {
 //data provided is 1st argument of callback function
 socket.on('newMessage', function (message){
     console.log('New message', message);
+    //jquery to create that element, then modify that element and add
+    //it to the markup, making it visible
+    var li = jQuery('<li></li>');
+    li.text(`${message.from}: ${message.text}`);
+
+    jQuery(`#messages`).append(li);
 });
 
-//emit data from client to server
+jQuery('#message-form').on('submit', function(e){
+    e.preventDefault();
 
+    //3rd: ack
+    socket.emit('createMessage', {
+        from: 'User',
+        //selector, select any element that has name attribute=message
+        text: jQuery('[name=message]').val()
+    }, function(){
+
+    });
+});
 
