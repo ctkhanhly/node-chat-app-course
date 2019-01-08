@@ -1,4 +1,29 @@
 var socket = io(); 
+
+function scrollToBottom(){
+    //Selectors
+    var messages = jQuery('#messages');
+    //children(): children of messages-have all list items
+    var newMessage = messages.children('li:last-child');
+    //Heights
+    //prop: cross-browser way to fetch a property
+    //non-jQuery way of doing it
+    var clientHeight = messages.prop('clientHeight');
+    var scrollTop = messages.prop('scrollTop');
+    var scrollHeight = messages.prop('scrollHeight');
+    var newMessageHeight = newMessage.innerHeight();
+    var lastMessageHeight = newMessage.prev().innerHeight();
+    //prev child, 2nd-to-last lst item
+
+    //add lastMessageHeight b/c if I can see User from lastMessage-> scroll down
+    //or if im at the last message: fully see User and its mess-> scroll down
+    //don't want to scroll user to bottom if they're up at the very top
+    if(clientHeight + scrollTop +newMessageHeight + lastMessageHeight>= scrollHeight){
+        //set scrollTop
+        messages.scrollTop(scrollHeight);
+    };
+};
+
 socket.on('connect', function(){
     console.log('Connected to the server');
 
@@ -30,6 +55,7 @@ socket.on('newMessage', function (message){
 
     //Mustache lets you inject values
     jQuery('#messages').append(html);
+    scrollToBottom();
 
     // console.log('New message', message);
     // //jquery to create that element, then modify that element and add
@@ -49,7 +75,8 @@ socket.on('newLocationMessage',function(message){
         createdAt: formattedTime
     });
     jQuery('#messages').append(html);
-    
+    scrollToBottom();
+
     // var li = jQuery('<li></li>');
     // //open this link in new tab
     // var a = jQuery('<a target="_blank">My current location</a>');
