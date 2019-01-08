@@ -19,30 +19,50 @@ socket.on('disconnect', function () {
 //data provided is 1st argument of callback function
 socket.on('newMessage', function (message){
     var formattedTime = moment(message.createdAt).format('h:mm a');
-    console.log('New message', message);
-    //jquery to create that element, then modify that element and add
-    //it to the markup, making it visible
-    var li = jQuery('<li></li>');
-    li.text(`${message.from} ${formattedTime}: ${message.text}`);
+    //html() return the markup inside message-template
+    var template = jQuery('#message-template').html();
+    //now mustache methods are available b/c we add a script tag message-template
+    var html = Mustache.render(template, {
+        text: message.text,
+        from: message.from,
+        createdAt: formattedTime
+    });
 
-    jQuery('#messages').append(li);
+    //Mustache lets you inject values
+    jQuery('#messages').append(html);
+
+    // console.log('New message', message);
+    // //jquery to create that element, then modify that element and add
+    // //it to the markup, making it visible
+    // var li = jQuery('<li></li>');
+    // li.text(`${message.from} ${formattedTime}: ${message.text}`);
+
+    // jQuery('#messages').append(li);
 });
 
 socket.on('newLocationMessage',function(message){
     var formattedTime = moment(message.createdAt).format('h:mm a');
-    var li = jQuery('<li></li>');
-    //open this link in new tab
-    var a = jQuery('<a target="_blank">My current location</a>');
+    var template = jQuery('#location-message-template').html();
+    var html = Mustache.render(template, {
+        from: message.from,
+        url: message.url,
+        createdAt: formattedTime
+    });
+    jQuery('#messages').append(html);
+    
+    // var li = jQuery('<li></li>');
+    // //open this link in new tab
+    // var a = jQuery('<a target="_blank">My current location</a>');
 
-    //set text and attribute here instead of in the string=> safer, prevent s.o injecting html code
-    li.text(`${message.from} ${formattedTime}: `);
+    // //set text and attribute here instead of in the string=> safer, prevent s.o injecting html code
+    // li.text(`${message.from} ${formattedTime}: `);
 
-    //a.attribute
-    //1 argument: e.g: target: fetch the value "_blank"
-    //2 argument: set the value
-    a.attr('href', message.url);
-    li.append(a);
-    jQuery('#messages').append(li);
+    // //a.attribute
+    // //1 argument: e.g: target: fetch the value "_blank"
+    // //2 argument: set the value
+    // a.attr('href', message.url);
+    // li.append(a);
+    // jQuery('#messages').append(li);
 });
 
 jQuery('#message-form').on('submit', function(e){
