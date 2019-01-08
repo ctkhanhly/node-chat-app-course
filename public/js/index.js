@@ -18,22 +18,24 @@ socket.on('disconnect', function () {
 
 //data provided is 1st argument of callback function
 socket.on('newMessage', function (message){
+    var formattedTime = moment(message.createdAt).format('h:mm a');
     console.log('New message', message);
     //jquery to create that element, then modify that element and add
     //it to the markup, making it visible
     var li = jQuery('<li></li>');
-    li.text(`${message.from}: ${message.text}`);
+    li.text(`${message.from} ${formattedTime}: ${message.text}`);
 
     jQuery('#messages').append(li);
 });
 
 socket.on('newLocationMessage',function(message){
+    var formattedTime = moment(message.createdAt).format('h:mm a');
     var li = jQuery('<li></li>');
     //open this link in new tab
     var a = jQuery('<a target="_blank">My current location</a>');
 
     //set text and attribute here instead of in the string=> safer, prevent s.o injecting html code
-    li.text(`${message.from}: `);
+    li.text(`${message.from} ${formattedTime}: `);
 
     //a.attribute
     //1 argument: e.g: target: fetch the value "_blank"
