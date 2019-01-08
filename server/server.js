@@ -5,7 +5,7 @@ const socketIO = require('socket.io');
 
 
 //app.use publicPath
-const {generateMessage} = require('./utils/message');
+const {generateMessage, generateLocationMessage} = require('./utils/message');
 const  publicPath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3000;
 var app = express();
@@ -39,18 +39,10 @@ io.on('connection',(socket)=>{
 
         callback('This is from the server');
 
-        //-----
+    });
 
-        //broadcast is an obj that has its own emit function
-        //same as socket.emit or io.emit
-        //the only difference is who it gets sent to: everyone but this socket
-        //---
-        // socket.broadcast.emit('newMessage', {
-        //     from: message.from,
-        //     text: message.text,
-        //     createdAt: new Date().getTime()
-        // });
-        //----
+    socket.on('createLocationMessage', (coords)=>{
+        io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));
     });
 
     socket.on('disconnect', ()=>{
