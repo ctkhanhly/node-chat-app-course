@@ -25,10 +25,21 @@ function scrollToBottom(){
 };
 
 socket.on('connect', function(){
-    console.log('Connected to the server');
-
+    //console.log('Connected to the server');
     //not emitting event until we are connected
-
+    //argument of deparam is a string
+    var params = jQuery.deparam(window.location.search);
+    socket.emit('join', params, function(err){
+        //if not able to join -> sth entered wrong, make them go back to form
+        // both name and room
+        if(err){
+            alert(err);
+            //back to root page
+            window.location.href = '/';
+        }else{
+            console.log('No err');
+        };
+    });
 });
 
 
@@ -36,7 +47,22 @@ socket.on('connect', function(){
 socket.on('disconnect', function () {
     console.log('Disconnected from the server');
 });
-    
+ 
+//users: namesArray
+socket.on('updateUserList', function(users){
+    //console.log('Users list',users);
+    var ol = jQuery('<ol></ol>');
+
+    users.forEach(function (user){
+        ol.append(jQuery('<li></li>').text(user));
+    });
+
+    //add to the dom
+    //dont append b/c dont want to update the list, want
+    //to completely wipe out the list
+    jQuery('#users').html(ol);
+});
+
 //listen to custom event, not name of a built-in event
 //1st argument: name of our custom event
 //2nd argument: callback function, gets called when the event gets fired
